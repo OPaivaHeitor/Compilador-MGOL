@@ -78,7 +78,7 @@ def scanner(content):
                             "\tTipo: " + str(symbol_table[lexeme])
                         print(output)
                         token_list.insert(pointer, [tokenClass, lexeme,
-                                          finalStateType, current_line, current_column])
+                                          symbol_table[lexeme], current_line, current_column])
 
                     else:
                         output = "Lexema: " + str(lexeme) + "\tToken: " + \
@@ -117,3 +117,4 @@ def scanner(content):
                 pointer += 1
                 current_column += 1
     token_list.insert(char_count, ["EOF", None, None, current_line, 0])
+    return token_list
