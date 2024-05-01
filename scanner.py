@@ -100,7 +100,7 @@ def scanner(content):
                 current_column += 1
                 lexeme = ""
 
-            elif (current_state == 4 or current_state == 10) and pointer == (char_count - 1):
+            elif (current_state == 4 or current_state == 7) and pointer == (char_count - 1):
                 print(error_table[current_state])
                 print(" Na linha ", current_line,
                       "e coluna ", current_column)
