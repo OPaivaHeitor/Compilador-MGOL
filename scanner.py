@@ -67,7 +67,7 @@ def scanner(content):
                 if tokenClass != 'id':
                     output = "Lexema: " + str(lexeme) + "\tToken: " + \
                         str(tokenClass) + "\tTipo: " + str(finalStateType)
-                    print(output)
+                    # print(output)
                     token_list.insert(pointer, [tokenClass, lexeme,
                                       finalStateType, current_line, current_column])
 
@@ -76,14 +76,14 @@ def scanner(content):
                         output = "Lexema: " + str(lexeme) + "\tToken: " + \
                             str(lexeme) + \
                             "\tTipo: " + str(symbol_table[lexeme])
-                        print(output)
+                        # print(output)
                         token_list.insert(pointer, [tokenClass, lexeme,
                                           symbol_table[lexeme], current_line, current_column])
 
                     else:
                         output = "Lexema: " + str(lexeme) + "\tToken: " + \
                             str(tokenClass) + "\tTipo: " + str(finalStateType)
-                        print(output)
+                        # print(output)
                         token_list.insert(pointer, [tokenClass, lexeme,
                                           finalStateType, current_line, current_column])
 
