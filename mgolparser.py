@@ -451,14 +451,34 @@ reductions = {
 }
 
 
-def parser(token_list):
+def find_error(actTableStateNumber):
+    actTableLine = action_table[actTableStateNumber]
+    reduction_flag = 0
+    expected_inputs = []
+    resulting_actions = []
+    for i in range(len(actTableLine)):
+        if actTableLine[i] != None:
+            resulting_actions.append(actTableLine[i])
+            for action in actions_dictionary:
+                if actions_dictionary[action] == i:
+                    expected_inputs.append(action)
+    for action in resulting_actions:
+        if action[0] == 'R':
+            reduction_flag = 1
+    return expected_inputs, resulting_actions, reduction_flag
+
+
+def parser(token_list, error_routine):
+    if error_routine != 0 and error_routine != 1:
+        print("Favor inserir um dos seguintes valores para a rotina de erro:\n0 - Panico\n1 - Insercao de Token")
+        return 0
 
     global pilha_semantica, atributos, verificador
 
     ponteiro = 0
     a = token_list[ponteiro]
     token = a[0]
-    pilha = a[0]
+    pilha = 0
 
     while (True):
         # Seja s o estado ao topo da pilha
@@ -466,7 +486,8 @@ def parser(token_list):
         # Verifica qual a coluna do token na tabela e busca a ação a ser feita na action_table
         coluna = actions_dictionary[token]
         tipo_action = action_table[s][coluna]
-
+        print("COLUNA: ", coluna)
+        print("TIPO_ACTION: ", tipo_action)
         if (tipo_action[0] == 'S'):
             pilha.insert(0, int(tipo_action[1:]))
             t = int(pilha[0])
@@ -489,3 +510,47 @@ def parser(token_list):
                 pilha.pop(0)
 
             t = int(pilha[0])
+
+            # Busca a transição do não terminal
+            goto_type = goto_table[t][goto_dictionary[nonterminal]]
+
+            # Empilha o valor encontrado na tabela e imprime a redução
+            pilha.insert(0, int(goto_type))
+            # print("Redução: ", reductions[reduz])
+            # print(pilha_semantica[1])
+
+        # Verificação se a ação na tabela de transição é um estado de aceitação com base no valor do topo da pilha
+        # Aqui, a análise deve terminar
+        elif (tipo_action == 'ACC'):
+            print("----------------------------------------")
+            print("Análise sintática concluída com sucesso!")
+            print("----------------------------------------")
+            break
+        else:
+            # Situação de erro
+            print("----------------------------------------")
+            expected_inputs, resulting_actions, reduction_flag = find_error(s)
+            verificador = False
+            print("Erro sintatico, entradas esperadas: ", expected_inputs)
+            print("----------------------------------------")
+
+        # Rotinas de erro
+
+        # PÂNICO
+        if error_routine == 0:
+            while (True):
+                ponteiro += 1
+                a = token_list[ponteiro]
+                token = a[0]
+                if (token == 'pt_v' or token == 'fc_p' or token == 'id' or token == 'fim' or token == 'fimse'):
+                    pilha.pop(0)
+                    break
+
+        # POR INSERÇÃO DE TOKEN
+        elif error_routine == 1:
+            token = expected_inputs[0]
+            ponteiro -= 1
+            a = token_list[ponteiro]
+
+
+print(token_list[0])
